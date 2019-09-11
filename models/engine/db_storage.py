@@ -40,6 +40,17 @@ class DBStorage:
         if HBNB_ENV == "test":
             Base.metadata.drop_all(self.__engine)
 
+    def get(self, cls, id):
+        """Returns the object based on the class name and its ID, or None if
+        not found"""
+        return(self.all(cls).get("{}.{}".format(cls, id)))
+
+    def count(self, cls=None):
+        """Returns the number of objects in storage matching the given
+        class name. If no name is passed, returns the count of all objects
+        in storage not found"""
+        return(len(self.all(cls)))
+
     def all(self, cls=None):
         """query on the current database session"""
         new_dict = {}
