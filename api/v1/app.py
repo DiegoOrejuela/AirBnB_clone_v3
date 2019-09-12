@@ -16,6 +16,7 @@ def shutdown_session(exception=None):
     "close the session"
     storage.close()
 
+
 @app.errorhandler(404)
 def not_found(e):
     'error handling'
