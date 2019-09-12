@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Module 9-states"""
+"""api file with the api flask instance"""
 from flask import Flask, render_template
 from models import storage
 from api.v1.views import app_views
@@ -17,4 +17,5 @@ def shutdown_session(exception=None):
     storage.close()
 
 if __name__ == '__main__':
-    app.run(host=getenv("HBNB_API_HOST"), port=int(getenv("HBNB_API_PORT")), threaded=True)
+    app.run(host=getenv("HBNB_API_HOST"),
+            port=int(getenv("HBNB_API_PORT")), threaded=True)
