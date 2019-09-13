@@ -4,10 +4,11 @@ from flask import jsonify, abort, request
 from api.v1.views import app_views
 from models import storage
 from models.state import State
+from models.state import City
 
 
 @app_views.route('/cities/<city_id>', methods=['PUT'])
-def put_state_by_id(city_id):
+def put_city_by_id(city_id):
     'updates a city'
     if not request.get_json():
         abort(400, "Not a JSON")
@@ -22,7 +23,7 @@ def put_state_by_id(city_id):
     else:
         abort(404)
 
-    return jsonify(state.to_dict()), 200
+    return jsonify(city.to_dict()), 200
 
 
 @app_views.route('/states/<state_id>/cities', methods=['POST'])
@@ -33,14 +34,14 @@ def post_city_by_id(state_id):
     if not request.get_json().get("name"):
         abort(400, "Missing name")
 
-    state = storage("State", state_id)
+    state = storage.get("State", state_id)
 
     if not state:
         abort(400)
 
-    city = City(**request.get_json().items())
-    setattr(state, city[key], city[value])
-    state.save()
+    city = City(**request.get_json())
+    setattr(city, 'state_id', state_id)
+    city.save()
     return jsonify(city.to_dict()), 201
 
 
@@ -49,9 +50,12 @@ def cities(state_id):
     'Retrieves the list of all City objects of a State'
     cities_list = []
     state = storage.get("State", state_id)
-    for key, value in state.all("City").items():
-        cities_list.append(value.to_dict())
-    return jsonify(list_states)
+    if state:
+        for obj in state.cities:
+            cities_list.append(obj.to_dict())
+        return jsonify(cities_list)
+    else:
+        abort(404)
 
 
 @app_views.route("/cities/<city_id>")
