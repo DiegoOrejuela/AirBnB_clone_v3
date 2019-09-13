@@ -7,8 +7,9 @@ from models.state import State
 from models.state import City
 from models.place import Place
 
+
 @app_views.route('/places/<place_id>', methods=['PUT'])
-def put_city_by_id(place_id):
+def put_place_by_id(place_id):
     'updates a place'
     if not request.get_json():
         abort(400, "Not a JSON")
@@ -17,17 +18,17 @@ def put_city_by_id(place_id):
 
     if place:
         for key, value in request.get_json().items():
-            if key != "id" and key != "created_at" and key != "updated_at"
-            setattr(place, key, value)
+            if key != "id" and key != "created_at" and key != "updated_at":
+                setattr(place, key, value)
         place.save()
     else:
         abort(404)
 
-    return jsonify(city.to_dict()), 200
+    return jsonify(place.to_dict()), 200
 
 
 @app_views.route('/cities/<city_id>/places', methods=['POST'])
-def post_city_by_id(city_id):
+def post_place_by_id(city_id):
     'create a place'
     if not request.get_json():
         abort(400, "Not a JSON")
@@ -37,7 +38,7 @@ def post_city_by_id(city_id):
         abort(400, "Missing user_id")
 
     city = storage.get("City", city_id)
-    if not storage.get("User", user_id):
+    if not storage.get("User", request.get_json().get("user_id")):
         abort(400)
 
     if not city:
@@ -45,11 +46,11 @@ def post_city_by_id(city_id):
 
     place = Place(**request.get_json())
     setattr(place, 'city_id', city_id)
-    city.save()
+    place.save()
     return jsonify(place.to_dict()), 201
 
 
-@app_views.route("/states/<city_id>/places")
+@app_views.route("/cities/<city_id>/places")
 def places(city_id):
     'Retrieves the list of all places objects of a city'
     places_list = []
