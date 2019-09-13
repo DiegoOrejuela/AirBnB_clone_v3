@@ -37,7 +37,7 @@ def post_city_by_id(state_id):
     state = storage.get("State", state_id)
 
     if not state:
-        abort(400)
+        abort(404)
 
     city = City(**request.get_json())
     setattr(city, 'state_id', state_id)
