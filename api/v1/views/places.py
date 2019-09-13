@@ -35,7 +35,7 @@ def post_place_by_id(city_id):
     if not request.get_json().get("name"):
         abort(400, "Missing name")
     if not request.get_json().get("user_id"):
-        abort(404, "Missing user_id")
+        abort(400, "Missing user_id")
 
     city = storage.get("City", city_id)
     if not storage.get("User", request.get_json().get("user_id")):
