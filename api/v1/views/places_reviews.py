@@ -40,10 +40,10 @@ def post_review_by_id(place_id):
 
     place = storage.get("Place", place_id)
     if not storage.get("User", request.get_json().get("user_id")):
-        abort(400)
+        abort(404)
 
     if not place:
-        abort(400)
+        abort(404)
 
     review = Review(**request.get_json())
     setattr(review, 'place_id', place_id)
