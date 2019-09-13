@@ -39,7 +39,7 @@ def post_place_by_id(city_id):
 
     city = storage.get("City", city_id)
     if not storage.get("User", request.get_json().get("user_id")):
-        abort(400)
+        abort(404)
 
     if not city:
         abort(404)
