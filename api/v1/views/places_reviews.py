@@ -19,8 +19,8 @@ def put_review_by_id(review_id):
 
     if review:
         for key, value in request.get_json().items():
-            if key != "id" and key != "created_at" and key != "updated_at"
-            setattr(review, key, value)
+            if key != "id" and key != "created_at" and key != "updated_at":
+                setattr(review, key, value)
         review.save()
     else:
         abort(404)
@@ -33,13 +33,13 @@ def post_review_by_id(place_id):
     'create a review'
     if not request.get_json():
         abort(400, "Not a JSON")
-    if not request.get_json().get("name"):
-        abort(400, "Missing name")
+    if not request.get_json().get("text"):
+        abort(400, "Missing text")
     if not request.get_json().get("user_id"):
         abort(400, "Missing user_id")
 
     place = storage.get("Place", place_id)
-    if not storage.get("User", user_id):
+    if not storage.get("User", request.get_json().get("user_id")):
         abort(400)
 
     if not place:
@@ -51,8 +51,8 @@ def post_review_by_id(place_id):
     return jsonify(review.to_dict()), 201
 
 
-@app_views.route("/states/<place_id>/reviews")
-def reviews(city_id):
+@app_views.route("/places/<place_id>/reviews")
+def reviews(place_id):
     'Retrieves the list of all review objects of a city'
     reviews_list = []
     places = storage.get("Place", place_id)
@@ -65,7 +65,7 @@ def reviews(city_id):
 
 
 @app_views.route("/reviews/<review_id>")
-def get_reviews_by_id(reviews_id):
+def get_reviews_by_id(review_id):
     'Retrieves a reviews object'
 
     review = storage.get("Review", review_id)
@@ -76,7 +76,7 @@ def get_reviews_by_id(reviews_id):
 
 
 @app_views.route('/reviews/<review_id>', methods=['DELETE'])
-def delete_place_by_id(review_id):
+def delete_review_by_id(review_id):
     'delete a review object'
 
     review = storage.get("Review", review_id)
