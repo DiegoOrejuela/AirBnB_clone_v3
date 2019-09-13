@@ -19,8 +19,8 @@ def put_user_by_id(user_id):
 
     if users:
         for key, value in request.get_json().items():
-            if key != "id" and key != "created_at" and key != "updated_at"
-            setattr(users, key, value)
+            if key != "id" and key != "created_at" and key != "updated_at":
+                setattr(users, key, value)
         users.save()
     else:
         abort(404)
